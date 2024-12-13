@@ -1,0 +1,104 @@
+@import url("https://fonts.googleapis.com/css2?family=Playfair:ital,opsz,wght@0,5..1200,300..900;1,5..1200,300..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins";
+}
+/* font-family: "Poppins"; */
+/* font-family: "Playfair", serif; */
+
+/* navbar */
+
+.navbar {
+  font-family: "Poppins";
+  font-size: 1.063rem;
+  line-height: 1.625rem;
+  text-transform: uppercase;
+  box-shadow: 0 8px 6px -6px gray;
+  border-bottom: 0px solid gray !important;
+}
+
+.nav-link {
+  font-weight: 300 !important;
+}
+
+.active {
+  border-bottom: 2px solid black;
+}
+
+.navbar-brand {
+  font-weight: 700;
+  font-family: "Roboto";
+  letter-spacing: 3px;
+}
+
+/* Contact Us */
+.contact-container {
+  padding: 4rem;
+}
+
+.contact-button {
+  padding: 1rem 2rem;
+  width: 100%;
+  font-size: 1.5rem;
+  text-transform: uppercase;
+}
+
+/* Footer */
+
+.footer {
+  color: white;
+  padding: 1.563rem;
+  background: #000;
+  background: -webkit-linear-gradient(to right #434343, #000000);
+}
+
+.footer a {
+  text-decoration: none;
+  color: white;
+  padding: 0.625rem;
+}
+
+.footer a:hover {
+  color: #ffefba;
+  border-bottom: 1px solid #ffefba;
+}
+
+/* Page not found */
+.pnf {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 65vh;
+}
+
+.pnf-title {
+  font-weight: 600;
+  font-size: 6rem;
+}
+
+.pnf-heading {
+  font-weight: 400;
+  margin-top: 1rem;
+}
+
+.pnf-button {
+  padding: 1rem;
+  color: black;
+  text-decoration: none;
+  border: 1px solid black;
+  margin-top: 2rem;
+}
+
+
+/* Register */
+
+.register{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 70vh;
+  flex-direction: column;
+}
