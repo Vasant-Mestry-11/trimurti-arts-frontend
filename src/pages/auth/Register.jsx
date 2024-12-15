@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "../../styles/authStyles.css";
+import useGetURL from "../../hooks/useGetURL";
 
 const Register = () => {
   const [userDetails, setUserDetails] = useState({
@@ -17,6 +18,8 @@ const Register = () => {
 
   const navigate = useNavigate();
 
+  const url = useGetURL();
+
   const handleChange = (e) => {
     setUserDetails((prevState) => ({
       ...prevState,
@@ -27,17 +30,14 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post(
-        `http://localhost:8080/api/v1/auth/register`,
-        {
-          name,
-          email,
-          password,
-          phone,
-          address,
-          answer,
-        }
-      );
+      const res = await axios.post(`${url}/auth/register`, {
+        name,
+        email,
+        password,
+        phone,
+        address,
+        answer,
+      });
       if (res.data.success) {
         toast.success(res.data.message);
         navigate("/login");

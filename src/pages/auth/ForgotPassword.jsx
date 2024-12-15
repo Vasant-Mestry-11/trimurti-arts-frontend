@@ -3,6 +3,7 @@ import Layout from "../../components/Layout/Layout";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
+import useGetURL from "../../hooks/useGetURL";
 
 const ForgotPassword = () => {
   const [userDetails, setUserDetails] = useState({
@@ -15,6 +16,8 @@ const ForgotPassword = () => {
 
   const navigate = useNavigate();
 
+  const url = useGetURL();
+
   const handleChange = (e) => {
     setUserDetails((prevState) => ({
       ...prevState,
@@ -25,14 +28,11 @@ const ForgotPassword = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post(
-        `http://localhost:8080/api/v1/auth/forgot-password`,
-        {
-          email,
-          newPassword,
-          answer,
-        }
-      );
+      const res = await axios.post(`${url}/auth/forgot-password`, {
+        email,
+        newPassword,
+        answer,
+      });
       if (res?.data.success) {
         toast.success(res.data.message);
         navigate("/login");

@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
+import useGetURL from "../../hooks/useGetURL";
 
 const Login = () => {
   const [userDetails, setUserDetails] = useState({
@@ -16,6 +17,8 @@ const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  const url = useGetURL();
+
   const handleChange = (e) => {
     setUserDetails((prevState) => ({
       ...prevState,
@@ -26,7 +29,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post(`http://localhost:8080/api/v1/auth/login`, {
+      const res = await axios.post(`${url}/auth/login`, {
         email,
         password,
       });

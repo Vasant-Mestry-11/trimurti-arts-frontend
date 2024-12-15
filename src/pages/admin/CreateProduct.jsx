@@ -4,6 +4,7 @@ import Layout from "../../components/Layout/Layout";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { Select } from "antd";
+import useGetURL from "../../hooks/useGetURL";
 
 const { Option } = Select;
 
@@ -11,14 +12,14 @@ const CreateProduct = () => {
   const [productData, setProductData] = useState({});
   const [categories, setCategories] = useState([]);
 
+  const url = useGetURL();
+
   const { name, description, price, category, quantity, photo, shipping } =
     productData;
 
   const getAllCategories = async () => {
     try {
-      const { data } = await axios.get(
-        "http://localhost:8080/api/v1/category/get-all-categories"
-      );
+      const { data } = await axios.get(`${url}/category/get-all-categories`);
       const { categories, success } = data;
       if (success) {
         setCategories(categories);
@@ -41,7 +42,7 @@ const CreateProduct = () => {
       formData.append("photo", photo);
       formData.append("category", category);
       const { data } = await axios.post(
-        "http://localhost:8080/api/v1/product/create-product",
+        `${url}/product/create-product`,
         formData
       );
       const { success } = data;
