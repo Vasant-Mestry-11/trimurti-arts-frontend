@@ -4,10 +4,14 @@ import AdminMenu from "../../components/Layout/AdminMenu";
 import Layout from "../../components/Layout/Layout";
 import axios from "axios";
 import CategoryForm from "../../components/Form/CategoryForm";
+import { Modal } from "antd";
 
 const CreateCategory = () => {
   const [categories, setCategories] = useState([]);
   const [formData, setFormData] = useState({});
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selected, setSelected] = useState(null);
+  const [updatedName, setUpdatedName] = useState("");
 
   const { categoryName } = formData;
 
@@ -43,6 +47,32 @@ const CreateCategory = () => {
     } catch (error) {
       console.log(error);
       toast.error("Failed to submit category");
+    }
+  };
+
+  const handleCategoryUpdate = async (e) => {
+    const { _id } = selected;
+    e.preventDefault();
+    try {
+      const { data } = await axios.put(
+        `http://localhost:8080/api/v1/category/update-category/${_id}`,
+        {
+          name: updatedName,
+        }
+      );
+      const { success } = data;
+      if (success) {
+        toast.success("Category updated successfully");
+        setUpdatedName(null);
+        setSelected(null);
+        setIsModalOpen(false);
+        getAllCategories();
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Failed to update category");
     }
   };
 
@@ -83,18 +113,48 @@ const CreateCategory = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {categories?.map(({ _id, name }) => (
-                    <tr key={_id}>
-                      <td>{name}</td>
-                      <td>
-                        <button className="btn btn-primary">Edit</button>
-                      </td>
-                    </tr>
-                  ))}
+                  {categories?.map((category) => {
+                    const { _id, name } = category;
+                    return (
+                      <tr key={_id}>
+                        <td>{name}</td>
+                        <td>
+                          <button
+                            className="btn btn-primary"
+                            data-bs-toggle="modal"
+                            data-bs-target="#exampleModal"
+                            onClick={() => {
+                              setIsModalOpen(true);
+                              setUpdatedName(name);
+                              setSelected(category);
+                            }}
+                          >
+                            Edit
+                          </button>
+                          <button className="btn btn-danger ms-2">
+                            Delete
+                          </button>
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
           </div>
+
+          <Modal
+            onCancel={() => setIsModalOpen(false)}
+            open={isModalOpen}
+            footer={null}
+            title="Update Category"
+          >
+            <CategoryForm
+              value={updatedName}
+              onChange={(e) => setUpdatedName(e.target.value)}
+              onSubmit={handleCategoryUpdate}
+            />
+          </Modal>
         </div>
       </div>
     </Layout>
