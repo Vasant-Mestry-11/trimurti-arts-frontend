@@ -18,6 +18,7 @@ import Profile from "./pages/user/Profile";
 import Orders from "./pages/user/Orders";
 
 function App() {
+  console.log(import.meta.env.MODE);
   return (
     <>
       <Routes>
