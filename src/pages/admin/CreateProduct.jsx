@@ -11,16 +11,8 @@ const CreateProduct = () => {
   const [productData, setProductData] = useState({});
   const [categories, setCategories] = useState([]);
 
-  const {
-    name,
-    slug,
-    description,
-    price,
-    category,
-    quantity,
-    photo,
-    shipping,
-  } = productData;
+  const { name, description, price, category, quantity, photo, shipping } =
+    productData;
 
   const getAllCategories = async () => {
     try {
@@ -34,6 +26,32 @@ const CreateProduct = () => {
     } catch (error) {
       console.log(error);
       toast.error("Failed to fetch categories");
+    }
+  };
+
+  const handleCreateProduct = async (e) => {
+    e.preventDefault();
+    try {
+      const formData = new FormData();
+      formData.append("name", name);
+      formData.append("description", description);
+      formData.append("price", price);
+      formData.append("quantity", quantity);
+      formData.append("shipping", shipping);
+      formData.append("photo", photo);
+      formData.append("category", category);
+      const { data } = await axios.post(
+        "http://localhost:8080/api/v1/product/create-product",
+        formData
+      );
+      const { success } = data;
+      if (success) {
+        setProductData({});
+        toast.success("Product created successfully");
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Failed to create product");
     }
   };
 
@@ -69,6 +87,7 @@ const CreateProduct = () => {
                     category: value,
                   }));
                 }}
+                value={category}
               >
                 {categories.map((category) => {
                   const { _id, name } = category;
@@ -92,7 +111,7 @@ const CreateProduct = () => {
                   </div>
                 )}
               </div>
-              
+
               <div className="mb-3">
                 <label
                   htmlFor="upload"
@@ -115,6 +134,7 @@ const CreateProduct = () => {
                 </label>
               </div>
 
+              {/* name */}
               <div className="mb-3">
                 <input
                   type="text"
@@ -124,6 +144,72 @@ const CreateProduct = () => {
                   className="form-control"
                   placeholder="Enter product name"
                 />
+              </div>
+
+              {/* description */}
+              <div className="mb-3">
+                <textarea
+                  name="description"
+                  value={description}
+                  onChange={handleProductDetailChanges}
+                  className="form-control"
+                  placeholder="Enter product description"
+                />
+              </div>
+
+              {/* price */}
+              <div className="mb-3">
+                <input
+                  type="number"
+                  name="price"
+                  value={price}
+                  onChange={handleProductDetailChanges}
+                  className="form-control"
+                  placeholder="Enter product price"
+                />
+              </div>
+
+              {/* quantity */}
+              <div className="mb-3">
+                <input
+                  type="number"
+                  name="quantity"
+                  value={quantity}
+                  onChange={handleProductDetailChanges}
+                  className="form-control"
+                  placeholder="Enter product quantity"
+                />
+              </div>
+
+              {/* Shipping */}
+              <div className="mb-3">
+                <Select
+                  placeholder="Select shipping"
+                  size="large"
+                  showSearch
+                  className="form-select mb-3"
+                  onChange={(value) => {
+                    setProductData((prevData) => ({
+                      ...prevData,
+                      shipping: value,
+                    }));
+                  }}
+                  name="shipping"
+                  options={[
+                    { value: "y", label: "Yes" },
+                    { value: "n", label: "No" },
+                  ]}
+                  value={shipping}
+                />
+              </div>
+
+              <div className="mb-3">
+                <button
+                  className="btn btn-primary"
+                  onClick={handleCreateProduct}
+                >
+                  Create Product
+                </button>
               </div>
             </div>
           </div>
