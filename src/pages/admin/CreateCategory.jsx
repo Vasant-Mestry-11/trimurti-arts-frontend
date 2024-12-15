@@ -76,6 +76,28 @@ const CreateCategory = () => {
     }
   };
 
+  const handleDeleteCategory = async (e) => {
+    const { _id } = selected;
+    e.preventDefault();
+    try {
+      const { data } = await axios.delete(
+        `http://localhost:8080/api/v1/category/delete-category/${_id}`
+      );
+      const { success } = data;
+      if (success) {
+        toast.success("Category deleted successfully");
+        setUpdatedName(null);
+        setSelected(null);
+        getAllCategories();
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Failed to delete category");
+    }
+  };
+
   const handleChange = (e) => {
     setFormData((prevState) => ({
       ...prevState,
@@ -131,7 +153,13 @@ const CreateCategory = () => {
                           >
                             Edit
                           </button>
-                          <button className="btn btn-danger ms-2">
+                          <button
+                            className="btn btn-danger ms-2"
+                            onClick={(e) => {
+                              setSelected(category);
+                              handleDeleteCategory(e);
+                            }}
+                          >
                             Delete
                           </button>
                         </td>
