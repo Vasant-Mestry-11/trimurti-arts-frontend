@@ -37,6 +37,13 @@ const CreateProduct = () => {
     }
   };
 
+  const handleProductDetailChanges = (e) => {
+    setProductData((prevData) => ({
+      ...prevData,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
   useEffect(() => {
     getAllCategories();
   }, []);
@@ -50,7 +57,7 @@ const CreateProduct = () => {
           </div>
           <div className="col-md-9">
             <h1>Create product</h1>
-            <div className="m-1">
+            <div className="m-1 w-75">
               <Select
                 placeholder="Select category"
                 size="large"
@@ -72,6 +79,52 @@ const CreateProduct = () => {
                   );
                 })}
               </Select>
+
+              <div className="mb-3">
+                {photo && (
+                  <div className="text-center">
+                    <img
+                      src={URL.createObjectURL(photo)}
+                      alt="photo"
+                      className="img img-responsive"
+                      height="200px"
+                    />
+                  </div>
+                )}
+              </div>
+              
+              <div className="mb-3">
+                <label
+                  htmlFor="upload"
+                  className="btn btn-outline-secondary col-md-12"
+                >
+                  {photo ? photo.name : "Upload Photo"}
+                  <input
+                    type="file"
+                    name="upload"
+                    id="upload"
+                    accept="image/*"
+                    onChange={(e) => {
+                      setProductData((prevData) => ({
+                        ...prevData,
+                        photo: e.target.files[0],
+                      }));
+                    }}
+                    hidden
+                  />
+                </label>
+              </div>
+
+              <div className="mb-3">
+                <input
+                  type="text"
+                  name="name"
+                  value={name}
+                  onChange={handleProductDetailChanges}
+                  className="form-control"
+                  placeholder="Enter product name"
+                />
+              </div>
             </div>
           </div>
         </div>
