@@ -92,13 +92,19 @@
   margin-top: 2rem;
 }
 
-
 /* Register */
 
-.register{
+.register {
   display: flex;
   align-items: center;
   justify-content: center;
   height: 70vh;
   flex-direction: column;
+}
+
+/* product */
+
+.product-link {
+  text-decoration: none;
+  color: black !important;
 }

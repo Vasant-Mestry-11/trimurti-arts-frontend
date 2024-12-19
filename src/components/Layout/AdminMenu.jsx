@@ -24,6 +24,12 @@ const AdminMenu = () => {
           >
             Users
           </NavLink>
+          <NavLink
+            to="/dashboard/admin/products"
+            className="list-group-item"
+          >
+            Products
+          </NavLink>
         </div>
       </div>
     </>
