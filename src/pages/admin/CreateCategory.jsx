@@ -41,6 +41,10 @@ const CreateCategory = () => {
       if (success) {
         toast.success("Category created successfully");
         getAllCategories();
+        setFormData((prevState) => ({
+          ...prevState,
+          categoryName: "",
+        }));
       } else {
         toast.error(data.message);
       }
@@ -124,6 +128,7 @@ const CreateCategory = () => {
                 onChange={handleChange}
                 onSubmit={handleSubmit}
                 name="categoryName"
+                isButtonDisabled={!categoryName}
               />
             </div>
             <div className="w-75">

@@ -1,6 +1,12 @@
 import PropTypes from "prop-types";
 
-const CategoryForm = ({ onSubmit, value, onChange, name }) => {
+const CategoryForm = ({
+  onSubmit,
+  value,
+  onChange,
+  name,
+  isButtonDisabled,
+}) => {
   return (
     <div>
       <form onSubmit={onSubmit}>
@@ -15,7 +21,11 @@ const CategoryForm = ({ onSubmit, value, onChange, name }) => {
           />
         </div>
 
-        <button type="submit" className="btn btn-primary">
+        <button
+          type="submit"
+          className="btn btn-primary"
+          disabled={isButtonDisabled}
+        >
           Submit
         </button>
       </form>
@@ -30,4 +40,5 @@ CategoryForm.propTypes = {
   value: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
   name: PropTypes.string.isRequired,
+  isButtonDisabled: PropTypes.bool,
 };

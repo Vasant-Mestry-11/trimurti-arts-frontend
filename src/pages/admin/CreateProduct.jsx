@@ -5,12 +5,14 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { Select } from "antd";
 import useGetURL from "../../hooks/useGetURL";
+import { useNavigate } from "react-router-dom";
 
 const { Option } = Select;
 
 const CreateProduct = () => {
   const [productData, setProductData] = useState({});
   const [categories, setCategories] = useState([]);
+  const navigate = useNavigate();
 
   const url = useGetURL();
 
@@ -49,6 +51,7 @@ const CreateProduct = () => {
       if (success) {
         setProductData({});
         toast.success("Product created successfully");
+        navigate("/dashboard/admin/products");
       }
     } catch (error) {
       console.log(error);
