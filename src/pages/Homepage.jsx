@@ -3,12 +3,14 @@ import Layout from "../components/Layout/Layout";
 import toast from "react-hot-toast";
 import axios from "axios";
 import useGetURL from "../hooks/useGetURL";
-import { Checkbox } from "antd";
+import CategoryFilter from "../components/Filters/CategoryFilter";
+import PriceFilter from "../components/Filters/PriceFilter";
 
 const Homepage = () => {
   const [allProducts, setAllProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [checkedFilters, setCheckedFilters] = useState([]);
+  const [checkedRadio, setCheckedRadio] = useState([]);
 
   const handleFilter = (value, id) => {
     let all = [...checkedFilters];
@@ -18,6 +20,10 @@ const Homepage = () => {
       all = all.filter((c) => c !== id);
     }
     setCheckedFilters(all);
+  };
+
+  const handleRadioChange = (e) => {
+    setCheckedRadio(e.target.value);
   };
 
   const url = useGetURL();
@@ -61,21 +67,14 @@ const Homepage = () => {
       <div className="m-3 p-3">
         <div className="row">
           <div className="col-md-2">
-            <h4 className="text-center">Filter By Category</h4>
-            <div className="d-flex flex-column">
-              {categories.map(({ _id, name }) => {
-                return (
-                  <Checkbox
-                    key={_id}
-                    onChange={(e) => handleFilter(e.target.checked, _id)}
-                  >
-                    {name}
-                  </Checkbox>
-                );
-              })}
-            </div>
+            <CategoryFilter
+              categories={categories}
+              handleFilter={handleFilter}
+            />
+            <PriceFilter handleRadioChange={handleRadioChange} />
           </div>
           <div className="col-md-10">
+            {JSON.stringify(checkedRadio, null, 4)}
             <h1 className="text-center">All products</h1>
             <div className="d-flex flex-wrap">
               {allProducts?.map((product) => {
