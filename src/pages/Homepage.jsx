@@ -58,9 +58,34 @@ const Homepage = () => {
       }
     };
 
-    getAllProducts();
+    if (!checkedPrice.length || !checkedFilters.length) getAllProducts();
+
     getAllCategories();
-  }, [url]);
+  }, [url, checkedFilters, checkedPrice]);
+
+  useEffect(() => {
+    const getFilteredProducts = async () => {
+      try {
+        const { data } = await axios.post(`${url}/product/filter-products`, {
+          checkedCategory: checkedFilters,
+          checkedPrice,
+        });
+        const { success, products } = data;
+        if (success) {
+          console.log("called", data);
+          setAllProducts(products);
+        } else {
+          toast.error("Failed to fetch products");
+        }
+      } catch (error) {
+        console.log(error);
+        toast.error(error);
+      }
+    };
+
+    if (checkedFilters.length > 0 || checkedPrice.length > 0)
+      getFilteredProducts();
+  }, [url, checkedFilters, checkedPrice]);
 
   return (
     <Layout title="All products - Best offers">
@@ -75,10 +100,11 @@ const Homepage = () => {
           </div>
           <div className="col-md-10">
             {JSON.stringify(checkedPrice, null, 4)}
+            {JSON.stringify(checkedFilters, null, 4)}
             <h1 className="text-center">All products</h1>
             <div className="d-flex flex-wrap">
               {allProducts?.map((product) => {
-                const { _id, name, description } = product;
+                const { _id, name, description, price } = product;
                 return (
                   <div
                     key={_id}
@@ -93,6 +119,7 @@ const Homepage = () => {
                     <div className="card-body">
                       <h5 className="card-title">{name}</h5>
                       <p className="card-text">{description}</p>
+                      <p className="card-text">₹ {price}</p>
                       <button className="btn btn-primary ms-1">
                         More details
                       </button>
