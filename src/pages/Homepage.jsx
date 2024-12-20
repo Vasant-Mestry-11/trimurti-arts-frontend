@@ -1,13 +1,24 @@
 import { useEffect, useState } from "react";
 import Layout from "../components/Layout/Layout";
-import useAuth from "../hooks/useAuth";
 import toast from "react-hot-toast";
 import axios from "axios";
 import useGetURL from "../hooks/useGetURL";
+import { Checkbox } from "antd";
 
 const Homepage = () => {
   const [allProducts, setAllProducts] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [checkedFilters, setCheckedFilters] = useState([]);
+
+  const handleFilter = (value, id) => {
+    let all = [...checkedFilters];
+    if (value) {
+      all.push(id);
+    } else {
+      all = all.filter((c) => c !== id);
+    }
+    setCheckedFilters(all);
+  };
 
   const url = useGetURL();
 
@@ -28,17 +39,43 @@ const Homepage = () => {
       }
     };
 
+    const getAllCategories = async () => {
+      try {
+        const { data } = await axios.get(`${url}/category/get-all-categories`);
+        const { categories, success } = data;
+        if (success) {
+          setCategories(categories);
+        }
+      } catch (error) {
+        console.log(error);
+        toast.error("Failed to fetch categories");
+      }
+    };
+
     getAllProducts();
+    getAllCategories();
   }, [url]);
 
   return (
     <Layout title="All products - Best offers">
       <div className="m-3 p-3">
         <div className="row">
-          <div className="col-md-3">
+          <div className="col-md-2">
             <h4 className="text-center">Filter By Category</h4>
+            <div className="d-flex flex-column">
+              {categories.map(({ _id, name }) => {
+                return (
+                  <Checkbox
+                    key={_id}
+                    onChange={(e) => handleFilter(e.target.checked, _id)}
+                  >
+                    {name}
+                  </Checkbox>
+                );
+              })}
+            </div>
           </div>
-          <div className="col-md-9">
+          <div className="col-md-10">
             <h1 className="text-center">All products</h1>
             <div className="d-flex flex-wrap">
               {allProducts?.map((product) => {
