@@ -10,7 +10,7 @@ const Homepage = () => {
   const [allProducts, setAllProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [checkedFilters, setCheckedFilters] = useState([]);
-  const [checkedRadio, setCheckedRadio] = useState([]);
+  const [checkedPrice, setCheckedPrice] = useState([]);
 
   const handleFilter = (value, id) => {
     let all = [...checkedFilters];
@@ -22,8 +22,8 @@ const Homepage = () => {
     setCheckedFilters(all);
   };
 
-  const handleRadioChange = (e) => {
-    setCheckedRadio(e.target.value);
+  const handlePriceChange = (e) => {
+    setCheckedPrice(e.target.value);
   };
 
   const url = useGetURL();
@@ -71,10 +71,10 @@ const Homepage = () => {
               categories={categories}
               handleFilter={handleFilter}
             />
-            <PriceFilter handleRadioChange={handleRadioChange} />
+            <PriceFilter handlePriceChange={handlePriceChange} />
           </div>
           <div className="col-md-10">
-            {JSON.stringify(checkedRadio, null, 4)}
+            {JSON.stringify(checkedPrice, null, 4)}
             <h1 className="text-center">All products</h1>
             <div className="d-flex flex-wrap">
               {allProducts?.map((product) => {

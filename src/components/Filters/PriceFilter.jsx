@@ -2,13 +2,13 @@ import { Radio } from "antd";
 import PropTypes from "prop-types";
 import { Prices } from "../Prices";
 
-const PriceFilter = ({ handleRadioChange }) => {
+const PriceFilter = ({ handlePriceChange }) => {
   return (
     <>
       <h4 className="text-center mt-4">Filter By Price</h4>
 
       <div className="d-flex flex-column">
-        <Radio.Group onChange={(e) => handleRadioChange(e)}>
+        <Radio.Group onChange={(e) => handlePriceChange(e)}>
           {Prices.map(({ _id, name, values }) => {
             return (
               <div key={_id}>
@@ -28,6 +28,5 @@ const PriceFilter = ({ handleRadioChange }) => {
 export default PriceFilter;
 
 PriceFilter.propTypes = {
-  categories: PropTypes.arrayOf(PropTypes.shape),
-  handleRadioChange: PropTypes.func,
+  handlePriceChange: PropTypes.func,
 };
