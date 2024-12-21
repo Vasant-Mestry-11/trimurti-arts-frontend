@@ -11,6 +11,9 @@ const Homepage = () => {
   const [categories, setCategories] = useState([]);
   const [checkedFilters, setCheckedFilters] = useState([]);
   const [checkedPrice, setCheckedPrice] = useState([]);
+  const [total, setTotal] = useState(0);
+  const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(false);
 
   const handleFilter = (value, id) => {
     let all = [...checkedFilters];
@@ -30,8 +33,11 @@ const Homepage = () => {
 
   useEffect(() => {
     const getAllProducts = async () => {
+      setLoading(true);
       try {
-        const { data } = await axios.get(`${url}/product/all-products/`);
+        const { data } = await axios.get(
+          `${url}/product/products-per-page/${page}`
+        );
         const { products, success } = data;
 
         if (success) {
@@ -42,6 +48,8 @@ const Homepage = () => {
       } catch (error) {
         console.log(error);
         toast.error(error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -58,12 +66,51 @@ const Homepage = () => {
       }
     };
 
+    const getTotalPages = async () => {
+      try {
+        const { data } = await axios.get(`${url}/product/product-count`);
+        const { total } = data;
+        setTotal(total);
+      } catch (error) {
+        console.log(error);
+        toast.error(error);
+      }
+    };
+
     if (!(checkedPrice.length > 0) && !(checkedFilters.length > 0)) {
       getAllProducts();
     }
 
     getAllCategories();
-  }, [url, checkedFilters, checkedPrice]);
+    getTotalPages();
+  }, [url, checkedFilters, checkedPrice, page]);
+
+  useEffect(() => {
+    if (page === 1) return;
+
+    const loadMoreProducts = async () => {
+      setLoading(true);
+      try {
+        const { data } = await axios.get(
+          `${url}/product/products-per-page/${page}`
+        );
+
+        const { products, success } = data;
+        if (success) {
+          setAllProducts([...allProducts, ...products]);
+        } else {
+          toast.error("Something went wrong");
+        }
+      } catch (error) {
+        console.log(error);
+        toast.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadMoreProducts();
+  }, [page]);
 
   useEffect(() => {
     const getFilteredProducts = async () => {
@@ -142,6 +189,18 @@ const Homepage = () => {
                   </div>
                 );
               })}
+            </div>
+            <div className="m-2 p-3">
+              {allProducts && allProducts.length < total && (
+                <button
+                  className="btn btn-warning"
+                  onClick={() => {
+                    setPage((prevPage) => prevPage + 1);
+                  }}
+                >
+                  {loading ? "Loading..." : "Load more"}
+                </button>
+              )}
             </div>
           </div>
         </div>
