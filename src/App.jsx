@@ -20,6 +20,7 @@ import Products from "./pages/admin/Products";
 import UpdateProduct from "./pages/admin/UpdateProduct";
 import Search from "./pages/Search";
 import ProductDetails from "./pages/product/ProductDetails";
+import Categories from "./pages/user/Categories";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
         <Route path="/" element={<Homepage />} />
         <Route path="/search" element={<Search />} />
         <Route path="/product/:slug" element={<ProductDetails />} />
+        <Route path="/categories" element={<Categories />} />
         <Route path="/register" element={<Register />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/dashboard" element={<PrivateRoute />}>
