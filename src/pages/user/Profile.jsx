@@ -15,14 +15,18 @@ const Profile = () => {
     address: "",
     answer: "",
   });
-  const [auth] = useAuth();
+  const [auth, setAuth] = useAuth();
   const url = useGetURL();
 
   useEffect(() => {
     const { name, email, password, phone, address } = auth.user;
     setUserDetails({
-      name, email, password, phone, address
-    })
+      name,
+      email,
+      password,
+      phone,
+      address,
+    });
   }, [auth.user]);
 
   const { name, email, password, phone, address } = userDetails;
@@ -37,17 +41,25 @@ const Profile = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post(`${url}/auth/register`, {
+      const { data } = await axios.put(`${url}/auth/update-profile`, {
         name,
         email,
         password,
         phone,
         address,
       });
-      if (res.data.success) {
-        toast.success(res.data.message);
+
+      const { success, message } = data;
+
+      if (success) {
+        setAuth({ ...auth, user: data.updatedUser });
+        let ls = localStorage.getItem("auth");
+        ls = JSON.parse(ls);
+        ls.user = data.updatedUser;
+        localStorage.setItem("auth", JSON.stringify(ls));
+        toast.success(message);
       } else {
-        toast.error(res.data.message);
+        toast.error(message);
       }
     } catch (error) {
       console.log(error);
@@ -75,7 +87,6 @@ const Profile = () => {
                     value={name}
                     name="name"
                     onChange={handleChange}
-                    required
                   />
                 </div>
 
@@ -88,7 +99,6 @@ const Profile = () => {
                     value={email}
                     name="email"
                     onChange={handleChange}
-                    required
                     disabled
                   />
                 </div>
@@ -102,7 +112,6 @@ const Profile = () => {
                     value={password}
                     name="password"
                     onChange={handleChange}
-                    required
                   />
                 </div>
 
@@ -115,7 +124,6 @@ const Profile = () => {
                     value={phone}
                     name="phone"
                     onChange={handleChange}
-                    required
                   />
                 </div>
 
@@ -128,7 +136,6 @@ const Profile = () => {
                     name="address"
                     value={address}
                     onChange={handleChange}
-                    required
                   />
                 </div>
 
