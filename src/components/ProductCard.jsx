@@ -9,10 +9,11 @@ const ProductCard = ({ product }) => {
   const url = useGetURL();
   const navigate = useNavigate();
 
-  const [, setCart] = useCart();
+  const [cart, setCart] = useCart();
 
   const handleAddToCart = () => {
     setCart((prevState) => [...prevState, product]);
+    localStorage.setItem("cart", JSON.stringify([...cart, product]));
     toast.success("Product added to cart");
   };
 

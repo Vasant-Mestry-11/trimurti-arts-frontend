@@ -5,10 +5,18 @@ import useCart from "../hooks/useCart";
 import useGetURL from "../hooks/useGetURL";
 
 const Cart = () => {
-  const [cart] = useCart();
+  const [cart, setCart] = useCart();
   const [auth] = useAuth();
   const navigate = useNavigate();
   const url = useGetURL();
+
+  const handleItemRemove = (id) => {
+    let temporaryCart = [...cart];
+    let index = temporaryCart.findIndex((item) => item._id === id);
+    temporaryCart.splice(index, 1);
+    localStorage.setItem("cart", JSON.stringify(temporaryCart));
+    setCart(temporaryCart);
+  };
 
   return (
     <Layout>
@@ -46,6 +54,12 @@ const Cart = () => {
                     <p>{name}</p>
                     <p>{description}</p>
                     <p>Price: ₹ {price}</p>
+                    <button
+                      className="btn btn-danger"
+                      onClick={() => handleItemRemove(_id)}
+                    >
+                      Remove
+                    </button>
                   </div>
                 </div>
               );
