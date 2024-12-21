@@ -1,9 +1,15 @@
 import PropTypes from "prop-types";
 import useGetURL from "../hooks/useGetURL";
+import { useNavigate } from "react-router-dom";
 
 const ProductCard = ({ product }) => {
-  const { _id, name, description, price } = product;
-  const url = useGetURL()
+  const { _id, name, description, price, slug } = product;
+  const url = useGetURL();
+  const navigate = useNavigate();
+
+  const handleMoreDetails = () => {
+    navigate(`/product/${slug}`);
+  };
   return (
     <div key={_id} className="card m-2" style={{ width: "18rem" }}>
       <img
@@ -15,7 +21,9 @@ const ProductCard = ({ product }) => {
         <h5 className="card-title">{name}</h5>
         <p className="card-text">{description}</p>
         <p className="card-text">₹ {price}</p>
-        <button className="btn btn-primary ms-1">More details</button>
+        <button className="btn btn-primary ms-1" onClick={handleMoreDetails}>
+          More details
+        </button>
         <button className="btn btn-secondary ms-1">Add to cart</button>
       </div>
     </div>
