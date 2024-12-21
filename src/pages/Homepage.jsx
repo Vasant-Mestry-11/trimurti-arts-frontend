@@ -58,7 +58,9 @@ const Homepage = () => {
       }
     };
 
-    if (!checkedPrice.length || !checkedFilters.length) getAllProducts();
+    if (!(checkedPrice.length > 0) && !(checkedFilters.length > 0)) {
+      getAllProducts();
+    }
 
     getAllCategories();
   }, [url, checkedFilters, checkedPrice]);
@@ -72,7 +74,6 @@ const Homepage = () => {
         });
         const { success, products } = data;
         if (success) {
-          console.log("called", data);
           setAllProducts(products);
         } else {
           toast.error("Failed to fetch products");
@@ -99,11 +100,9 @@ const Homepage = () => {
             <PriceFilter handlePriceChange={handlePriceChange} />
           </div>
           <div className="col-md-10">
-            {JSON.stringify(checkedPrice, null, 4)}
-            {JSON.stringify(checkedFilters, null, 4)}
             <h1 className="text-center">All products</h1>
             <div className="d-flex flex-wrap">
-              {allProducts?.map((product) => {
+              {allProducts.map((product) => {
                 const { _id, name, description, price } = product;
                 return (
                   <div
