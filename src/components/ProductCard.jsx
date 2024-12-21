@@ -37,5 +37,6 @@ ProductCard.propTypes = {
     name: PropTypes.string,
     description: PropTypes.string,
     price: PropTypes.string,
+    slug: PropTypes.string,
   }),
 };

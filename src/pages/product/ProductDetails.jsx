@@ -4,11 +4,13 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import useGetURL from "../../hooks/useGetURL";
 import { useEffect, useState } from "react";
+import ProductCard from "../../components/ProductCard";
 
 const ProductDetails = () => {
   const { slug } = useParams();
   const url = useGetURL();
   const [productDetails, setProductDetails] = useState({});
+  const [similarProducts, setSimilarProducts] = useState([]);
 
   const { _id, name, description, price, quantity, category } = productDetails;
 
@@ -19,6 +21,7 @@ const ProductDetails = () => {
         const { success, product } = data;
         if (success) {
           setProductDetails(product);
+          getSimilarProducts();
         } else {
           toast.error("Something went wrong");
         }
@@ -28,14 +31,34 @@ const ProductDetails = () => {
       }
     };
 
+    const getSimilarProducts = async () => {
+      if (_id && category._id) {
+        try {
+          const { data } = await axios.get(
+            `${url}/product/related-products/${_id}/${category?._id}`
+          );
+          const { success, products } = data;
+          if (success) {
+            console.log(products);
+            setSimilarProducts(products);
+          } else {
+            toast.error("Something went wrong");
+          }
+        } catch (error) {
+          console.log(error);
+          toast.error(error);
+        }
+      }
+    };
+
     getProductDetails();
-  }, [slug, url]);
+  }, [slug, url, _id, category?._id]);
   return (
     <Layout>
       <div className="row container m-3">
         <div className="col-md-6">
           <img
-            src={`${url}/product/get-product-photo/${_id}`}
+            src={`${url}/product/get-product-photo/${_id}`} // fix this BSON error
             className="card-img-top"
             alt={name}
           />
@@ -52,7 +75,17 @@ const ProductDetails = () => {
         </div>
       </div>
 
-      <div className="m-3">Similar products</div>
+      <hr />
+      <h3 className="text-center">Similar Products</h3>
+      {similarProducts.length < 1 ? (
+        <p className="text-center">No similar products found</p>
+      ) : (
+        <div className="m-3 d-flex flex-wrap">
+          {similarProducts.map((product) => (
+            <ProductCard product={product} key={product._id} />
+          ))}
+        </div>
+      )}
     </Layout>
   );
 };
