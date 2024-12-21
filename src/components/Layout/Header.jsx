@@ -5,6 +5,7 @@ import { LOGOUT } from "../../constants/auth";
 import SearchBox from "../Form/SearchBox";
 import { useCategory } from "../../hooks/useCategory";
 import useCart from "../../hooks/useCart";
+import { Badge } from "antd";
 
 const Header = () => {
   const [auth, setAuth] = useAuth();
@@ -126,9 +127,9 @@ const Header = () => {
                   </li>
                 </>
               )}
-              <li className="nav-item">
+              <li className="nav-item d-flex align-items-center">
                 <NavLink className="nav-link" to="/cart">
-                  Cart ({cart.length})
+                  Cart <Badge count={cart.length} showZero></Badge>
                 </NavLink>
               </li>
             </ul>

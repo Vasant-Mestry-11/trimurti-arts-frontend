@@ -9,7 +9,7 @@ const ProductCard = ({ product }) => {
   const url = useGetURL();
   const navigate = useNavigate();
 
-  const [cart, setCart] = useCart();
+  const [, setCart] = useCart();
 
   const handleAddToCart = () => {
     setCart((prevState) => [...prevState, product]);
