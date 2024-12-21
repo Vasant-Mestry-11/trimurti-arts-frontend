@@ -96,8 +96,21 @@ const Homepage = () => {
             <CategoryFilter
               categories={categories}
               handleFilter={handleFilter}
+              checkedFilters={checkedFilters}
             />
-            <PriceFilter handlePriceChange={handlePriceChange} />
+            <PriceFilter
+              handlePriceChange={handlePriceChange}
+              value={checkedPrice}
+            />
+            <button
+              className="mt-4 py-2 px-4 btn btn-secondary"
+              onClick={() => {
+                setCheckedFilters([]);
+                setCheckedPrice([]);
+              }}
+            >
+              Reset Filters
+            </button>
           </div>
           <div className="col-md-10">
             <h1 className="text-center">All products</h1>
