@@ -2,15 +2,17 @@ import { useNavigate } from "react-router-dom";
 import Layout from "../components/Layout/Layout";
 import useAuth from "../hooks/useAuth";
 import useCart from "../hooks/useCart";
+import useGetURL from "../hooks/useGetURL";
 
 const Cart = () => {
   const [cart] = useCart();
   const [auth] = useAuth();
   const navigate = useNavigate();
+  const url = useGetURL();
 
   return (
     <Layout>
-      <div className="container m-3">
+      <div className="container">
         <div className="row">
           <div className="col-md-12">
             <h1 className="text-center p-2 mb-2">
@@ -24,6 +26,32 @@ const Cart = () => {
                 : `Your cart is empty`}
             </h4>
           </div>
+        </div>
+
+        <div className="row">
+          <div className="col-md-7">
+            {cart.map(({ _id, name, description, price }) => {
+              return (
+                <div className="row mb-2 card flex-row" key={_id}>
+                  <div className="col-md-4">
+                    <img
+                      src={`${url}/product/get-product-photo/${_id}`}
+                      className="card-img-top"
+                      alt={name}
+                      height="200px"
+                      width="200px"
+                    />
+                  </div>
+                  <div className="col-md-4">
+                    <p>{name}</p>
+                    <p>{description}</p>
+                    <p>Price: ₹ {price}</p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+          <div className="col-md-5">Checkout | Payment</div>
         </div>
       </div>
     </Layout>
