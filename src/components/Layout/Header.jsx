@@ -3,9 +3,11 @@ import useAuth from "../../hooks/useAuth";
 import toast from "react-hot-toast";
 import { LOGOUT } from "../../constants/auth";
 import SearchBox from "../Form/SearchBox";
+import { useCategory } from "../../hooks/useCategory";
 
 const Header = () => {
   const [auth, setAuth] = useAuth();
+  const categories = useCategory();
 
   const handleLogout = () => {
     setAuth({
@@ -42,10 +44,29 @@ const Header = () => {
                   Home
                 </NavLink>
               </li>
-              <li className="nav-item">
-                <NavLink className="nav-link" to="/category">
-                  Category
-                </NavLink>
+              <li className="nav-item dropdown">
+                <Link
+                  className="nav-link dropdown-toggle"
+                  to="/categories"
+                  role="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  Categories
+                </Link>
+                <ul className="dropdown-menu">
+                  {categories.map(({ _id, name, slug }) => (
+                    <li key={_id}>
+                      <Link
+                        className="dropdown-item"
+                        href="#"
+                        to={`/categories/${slug}`}
+                      >
+                        {name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
               </li>
               {!auth.user ? (
                 <>
