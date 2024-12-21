@@ -5,6 +5,7 @@ import axios from "axios";
 import useGetURL from "../hooks/useGetURL";
 import CategoryFilter from "../components/Filters/CategoryFilter";
 import PriceFilter from "../components/Filters/PriceFilter";
+import ProductCard from "../components/ProductCard";
 
 const Homepage = () => {
   const [allProducts, setAllProducts] = useState([]);
@@ -163,31 +164,7 @@ const Homepage = () => {
             <h1 className="text-center">All products</h1>
             <div className="d-flex flex-wrap">
               {allProducts.map((product) => {
-                const { _id, name, description, price } = product;
-                return (
-                  <div
-                    key={_id}
-                    className="card m-2"
-                    style={{ width: "18rem" }}
-                  >
-                    <img
-                      src={`${url}/product/get-product-photo/${_id}`}
-                      className="card-img-top"
-                      alt="..."
-                    />
-                    <div className="card-body">
-                      <h5 className="card-title">{name}</h5>
-                      <p className="card-text">{description}</p>
-                      <p className="card-text">₹ {price}</p>
-                      <button className="btn btn-primary ms-1">
-                        More details
-                      </button>
-                      <button className="btn btn-secondary ms-1">
-                        Add to cart
-                      </button>
-                    </div>
-                  </div>
-                );
+                return <ProductCard product={product} key={product._id} />;
               })}
             </div>
             <div className="m-2 p-3">
