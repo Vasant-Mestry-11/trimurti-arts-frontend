@@ -18,6 +18,16 @@ const Cart = () => {
     setCart(temporaryCart);
   };
 
+  const totalPrice = () => {
+    const total = cart.reduce((acc, curr) => {
+      return acc + curr.price;
+    }, 0);
+    return total.toLocaleString("en-US", {
+      style: "currency",
+      currency: "INR",
+    });
+  };
+
   return (
     <Layout>
       <div className="container">
@@ -65,7 +75,12 @@ const Cart = () => {
               );
             })}
           </div>
-          <div className="col-md-5">Checkout | Payment</div>
+          <div className="col-md-5 text-center">
+            <h2>Cart Summary</h2>
+            <p>Total | Checkout | Payment</p>
+            <hr />
+            <h4>Total: {totalPrice()}</h4>
+          </div>
         </div>
       </div>
     </Layout>
