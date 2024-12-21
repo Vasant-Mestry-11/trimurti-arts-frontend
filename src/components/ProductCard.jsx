@@ -1,11 +1,20 @@
 import PropTypes from "prop-types";
 import useGetURL from "../hooks/useGetURL";
 import { useNavigate } from "react-router-dom";
+import useCart from "../hooks/useCart";
+import toast from "react-hot-toast";
 
 const ProductCard = ({ product }) => {
   const { _id, name, description, price, slug } = product;
   const url = useGetURL();
   const navigate = useNavigate();
+
+  const [cart, setCart] = useCart();
+
+  const handleAddToCart = () => {
+    setCart((prevState) => [...prevState, product]);
+    toast.success("Product added to cart");
+  };
 
   const handleMoreDetails = () => {
     navigate(`/product/${slug}`);
@@ -24,7 +33,9 @@ const ProductCard = ({ product }) => {
         <button className="btn btn-primary ms-1" onClick={handleMoreDetails}>
           More details
         </button>
-        <button className="btn btn-secondary ms-1">Add to cart</button>
+        <button className="btn btn-secondary ms-1" onClick={handleAddToCart}>
+          Add to cart
+        </button>
       </div>
     </div>
   );
