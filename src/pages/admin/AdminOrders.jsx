@@ -1,45 +1,74 @@
 import { useEffect, useState } from "react";
+import AdminMenu from "../../components/Layout/AdminMenu";
 import Layout from "../../components/Layout/Layout";
-import UserMenu from "../../components/Layout/UserMenu";
+import axios from "axios";
 import toast from "react-hot-toast";
 import useGetURL from "../../hooks/useGetURL";
-import axios from "axios";
 import useAuth from "../../hooks/useAuth";
+import { Select } from "antd";
 import moment from "moment";
 
-const Orders = () => {
+const { Option } = Select;
+
+const AdminOrders = () => {
+  const [status, setStatus] = useState([
+    "Not Process",
+    "Processing",
+    "Shipped",
+    "Delivered",
+    "Canceled",
+  ]);
+
+  const [changeStatus, setChangeStatus] = useState("");
+
   const [orders, setOrders] = useState([]);
   const url = useGetURL();
   const [auth] = useAuth();
 
-  useEffect(() => {
-    const getOrders = async () => {
-      try {
-        const { data } = await axios.get(`${url}/auth/orders`);
-        const { success, orders } = data;
-        if (success) {
-          setOrders(orders);
-        }
-      } catch (error) {
-        console.log(error);
-        toast.error(error);
+  const getAllOrders = async () => {
+    try {
+      const { data } = await axios.get(`${url}/auth/all-orders`);
+      const { success, orders } = data;
+      if (success) {
+        setOrders(orders);
       }
-    };
+    } catch (error) {
+      console.log(error);
+      toast.error(error);
+    }
+  };
 
+  useEffect(() => {
     if (auth?.token) {
-      getOrders();
+      getAllOrders();
     }
   }, [url, auth?.token]);
 
+  const handleStatusChange = async (orderId, newStatus) => {
+    try {
+      const { data } = await axios.put(
+        `${url}/auth/order-status-update/${orderId}`,
+        {
+          status: newStatus,
+        }
+      );
+      getAllOrders();
+    } catch (error) {
+      console.log(error);
+      toast.error(error);
+    }
+  };
+
   return (
-    <Layout title="Dashboard - Orders">
+    <Layout title="All orders">
       <div className="container-fluid p-3 m-3">
         <div className="row">
           <div className="col-md-3">
-            <UserMenu />
+            <AdminMenu />
           </div>
           <div className="col-md-9">
-            <h1 className="text-center">Orders</h1>
+            <h1 className="text-center">All orders</h1>
+
             <div className="mt-4">
               {orders.map((o, i) => (
                 <div className="border shadow" key={o._id}>
@@ -57,7 +86,20 @@ const Orders = () => {
                     <tbody>
                       <tr>
                         <td>{i + 1}</td>
-                        <td>{o?.status}</td>
+                        <td>
+                          <Select
+                            onChange={(value) =>
+                              handleStatusChange(o._id, value)
+                            }
+                            defaultValue={o?.status}
+                          >
+                            {status.map((st, i) => (
+                              <Option key={i} value={st}>
+                                {st}
+                              </Option>
+                            ))}
+                          </Select>
+                        </td>
                         <td>{o?.buyer?.name}</td>
                         <td>{moment(o?.createdAt).fromNow()}</td>
                         <td>{o?.payment?.success ? "Success" : "Failed"}</td>
@@ -98,4 +140,4 @@ const Orders = () => {
   );
 };
 
-export default Orders;
+export default AdminOrders;
