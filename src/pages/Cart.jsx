@@ -3,12 +3,19 @@ import Layout from "../components/Layout/Layout";
 import useAuth from "../hooks/useAuth";
 import useCart from "../hooks/useCart";
 import useGetURL from "../hooks/useGetURL";
+import DropIn from "braintree-web-drop-in-react";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 const Cart = () => {
   const [cart, setCart] = useCart();
   const [auth] = useAuth();
   const navigate = useNavigate();
   const url = useGetURL();
+  const [clientToken, setClientToken] = useState("");
+  const [instance, setInstance] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleItemRemove = (id) => {
     let temporaryCart = [...cart];
@@ -26,6 +33,46 @@ const Cart = () => {
       style: "currency",
       currency: "INR",
     });
+  };
+
+  useEffect(() => {
+    const getToken = async () => {
+      try {
+        const { data } = await axios.get(`${url}/product/braintree/token`);
+        setClientToken(data?.clientToken);
+      } catch (error) {
+        console.log(error);
+        toast.error("Failed to get token");
+      }
+    };
+
+    getToken();
+  }, [auth?.token, url]);
+
+  const handlePayment = async () => {
+    setLoading(true);
+    try {
+      // const { nonce } = await instance.requestPaymentMethod();
+      // const { data } = await axios.post(
+      //   `${url}/product/braintree/payment/${nonce}`,
+      //   {
+      //     nonce,
+      //     cart,
+      //   }
+      // );
+
+      // console.log("================= ", data);
+
+      localStorage.removeItem("cart");
+      setCart([]);
+      navigate("/dashboard/user/orders");
+      toast.success("Payment Completed");
+    } catch (error) {
+      console.log(error);
+      toast.error(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -118,6 +165,33 @@ const Cart = () => {
                 </div>
               </>
             )}
+            <div className="m-2">
+              {/* TODO: Link paypal sandbox to resolve the errors */}
+              {!clientToken || !cart.length ? (
+                ""
+              ) : (
+                <>
+                  <DropIn
+                    options={{
+                      authorization: clientToken,
+                      paypal: {
+                        flow: "vault",
+                      },
+                    }}
+                    onInstance={(instance) => {
+                      setInstance(instance);
+                    }}
+                  />
+                  <button
+                    className="btn btn-primary"
+                    onClick={handlePayment}
+                    // disabled={!loading || !instance || !auth?.user?.address}
+                  >
+                    {loading ? "Processing" : "Make payment"}
+                  </button>
+                </>
+              )}
+            </div>
           </div>
         </div>
       </div>
