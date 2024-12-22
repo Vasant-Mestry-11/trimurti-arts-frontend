@@ -80,6 +80,44 @@ const Cart = () => {
             <p>Total | Checkout | Payment</p>
             <hr />
             <h4>Total: {totalPrice()}</h4>
+            {auth?.user?.address ? (
+              <>
+                <div className="mb-3">
+                  <h4>Current Address</h4>
+                  <h5>{auth.user.address}</h5>
+                  <button
+                    className="btn btn-outline-info"
+                    onClick={() => navigate("/dashboard/user/profile")}
+                  >
+                    Update address
+                  </button>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="mb-4">
+                  {auth?.token ? (
+                    <button
+                      className="btn btn-outline-info"
+                      onClick={() => navigate("/dashboard/user/profile")}
+                    >
+                      Update address
+                    </button>
+                  ) : (
+                    <button
+                      className="btn btn-outline-info"
+                      onClick={() =>
+                        navigate("/login", {
+                          state: "/cart",
+                        })
+                      }
+                    >
+                      Login to checkout
+                    </button>
+                  )}
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>
