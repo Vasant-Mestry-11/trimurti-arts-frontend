@@ -19,8 +19,6 @@ const AdminOrders = () => {
     "Canceled",
   ]);
 
-  const [changeStatus, setChangeStatus] = useState("");
-
   const [orders, setOrders] = useState([]);
   const url = useGetURL();
   const [auth] = useAuth();
@@ -52,6 +50,7 @@ const AdminOrders = () => {
           status: newStatus,
         }
       );
+      console.log(data);
       getAllOrders();
     } catch (error) {
       console.log(error);
