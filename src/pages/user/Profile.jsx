@@ -19,11 +19,10 @@ const Profile = () => {
   const url = useGetURL();
 
   useEffect(() => {
-    const { name, email, password, phone, address } = auth.user;
+    const { name, email, phone, address } = auth.user;
     setUserDetails({
       name,
       email,
-      password,
       phone,
       address,
     });
